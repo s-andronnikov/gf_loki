@@ -36,6 +36,9 @@ common:
   ring:
     kvstore:
       store: memberlist
+limits_config:
+  ingestion_rate_mb: 8
+  ingestion_burst_size_mb: 10
 ruler:
   storage:
     s3:
