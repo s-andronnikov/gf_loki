@@ -1,0 +1,89 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Host Load Overview",
+    "tags": ["templated"],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "refresh": "5s",
+    "time": {
+      "from": "now-3d",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "type": "graph",
+        "title": "CPU Usage",
+        "targets": [
+          {
+            "expr": "100 - (avg by (instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "percent",
+            "label": "",
+            "logBase": 1,
+            "max": 100,
+            "min": 0,
+            "show": true
+          }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "Memory Usage",
+        "targets": [
+          {
+            "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "percent",
+            "label": "",
+            "logBase": 1,
+            "max": 100,
+            "min": 0,
+            "show": true
+          }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "Disk Usage",
+        "targets": [
+          {
+            "expr": "(node_filesystem_size_bytes{fstype!~\"tmpfs|fuse.lxcfs\"} - node_filesystem_free_bytes{fstype!~\"tmpfs|fuse.lxcfs\"}) / node_filesystem_size_bytes{fstype!~\"tmpfs|fuse.lxcfs\"} * 100",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "percent",
+            "label": "",
+            "logBase": 1,
+            "max": 100,
+            "min": 0,
+            "show": true
+          }
+        ]
+      }
+    ],
+    "templating": {
+      "list": []
+    },
+    "annotations": {
+      "list": []
+    }
+  }
+}

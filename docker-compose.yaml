@@ -64,6 +64,8 @@ services:
       - 8080
     networks:
       - loki
+    environment:
+      - MONITOR_CONTAINERS=${MONITOR_CONTAINERS}
 
   prometheus:
     extends:
@@ -123,26 +125,14 @@ services:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - ./conf/grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - gateway
     entrypoint:
       - sh
       - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-          - name: Loki
-            type: loki
-            access: proxy
-            url: http://gateway:3100
-            jsonData:
-              httpHeaderName1: "X-Scope-OrgID"
-            secureJsonData:
-              httpHeaderValue1: "tenant1"
-        EOF
-        /run.sh
+      - /run.sh
     ports:
       - "3333:3000"
     healthcheck:
